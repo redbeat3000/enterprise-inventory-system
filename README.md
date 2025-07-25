@@ -35,5 +35,5 @@ This project is a robust **Inventory Management System** designed for a multi-br
 
 ### 1. Clone the Repo
 ```bash
-git clone https://github.com/yourusername/inventory-db-system.git
-cd inventory-db-system
+git clone https://github.com/redbeat3000/enterprise-inventory-system.git
+cd enterprise-inventory-system
