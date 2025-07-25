@@ -34,6 +34,16 @@ CREATE TABLE Inventory (
 );
 
 -- 3. Low-Stock Alert System Using Triggers
+CREATE TABLE Alerts (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    product_id INT,
+    branch_id INT,
+    alert_message TEXT,
+    created_at DATETIME,
+    FOREIGN KEY (product_id) REFERENCES Products(id),
+    FOREIGN KEY (branch_id) REFERENCES Branches(id)
+);
+
 DELIMITER $$
 CREATE TRIGGER trg_low_stock_alert
 AFTER UPDATE ON Inventory
@@ -45,16 +55,6 @@ BEGIN
     END IF;
 END $$
 DELIMITER ;
-
-CREATE TABLE Alerts (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    product_id INT,
-    branch_id INT,
-    alert_message TEXT,
-    created_at DATETIME,
-    FOREIGN KEY (product_id) REFERENCES Products(id),
-    FOREIGN KEY (branch_id) REFERENCES Branches(id)
-);
 
 -- 4. Audit Logs for Inventory Changes
 CREATE TABLE Inventory_Audit (
@@ -80,5 +80,23 @@ DELIMITER ;
 -- Example with MySQL range partitioning on changed_at
 -- Requires using a partitionable storage engine like InnoDB and proper date formatting
 -- Optional: use for large-scale systems
+
+-- 6. Sample Data Seeding
+INSERT INTO Categories (name) VALUES ('Electronics'), ('Furniture'), ('Groceries');
+
+INSERT INTO Products (name, category_id, sku, description) VALUES
+('Laptop', 1, 'ELEC-001', '15 inch laptop'),
+('Office Chair', 2, 'FURN-001', 'Ergonomic chair'),
+('Rice 5kg', 3, 'GROC-001', 'Basmati rice');
+
+INSERT INTO Branches (name, type, location) VALUES
+('Main Store', 'store', 'Downtown'),
+('Central Warehouse', 'warehouse', 'Industrial Area');
+
+INSERT INTO Inventory (product_id, branch_id, quantity) VALUES
+(1, 1, 25),
+(1, 2, 100),
+(2, 1, 5), -- Will trigger alert
+(3, 1, 15);
 
 -- END OF DATABASE STARTER FILE
